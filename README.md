@@ -1,6 +1,6 @@
 # Sector Sender
 
-
+Code de l'arduino qui correspond au secteur.
 
 ## Getting started
 
