@@ -1,39 +1,18 @@
-#include <Arduino.h>
-#include <Chrono.h>
+#include "IRSender.h"
 
-#define IR_SEND_PIN 2
+#define IR_SENDER_PIN 2
 
-int puceId = 2;
+IRSender irSender(IR_SENDER_PIN, Puce::Sector1);
 
-void pulseIr(long microsecs);
+
 
 void setup() {
-  pinMode(IR_SEND_PIN, OUTPUT);
-  Serial.begin(9600);
+  Serial.begin(115200);
+
+  irSender.setup();
 }
 
 void loop() {
-  pulseIr(400);
-
-  if (puceId == 1)
-    delayMicroseconds(400);
-  else if (puceId == 2)
-    delayMicroseconds(800);
-  else if (puceId == 3) {
-    delayMicroseconds(800);
-    pulseIr(400);
-    delayMicroseconds(400);
-  }
+  irSender.sendSignal();
 }
 
-void pulseIr(long microsecs)
-{
-  Chrono pulseClock(Chrono::MICROS);
-
-  while (!pulseClock.hasPassed(microsecs, false)) {
-    digitalWrite(IR_SEND_PIN, HIGH);
-    delayMicroseconds(9);
-    digitalWrite(IR_SEND_PIN, LOW);
-    delayMicroseconds(9);
-  }
-}
