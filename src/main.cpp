@@ -2,8 +2,7 @@
 
 #define IR_SENDER_PIN 2
 
-IRSender irSender(IR_SENDER_PIN, Puce::Sector1);
-
+IRSender irSender(IR_SENDER_PIN, 0b00);
 
 
 void setup() {
@@ -13,6 +12,6 @@ void setup() {
 }
 
 void loop() {
-  irSender.sendSignal();
+  irSender.sendPulseSignal(1000);
 }
 

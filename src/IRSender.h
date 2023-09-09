@@ -4,76 +4,44 @@
 #include <Arduino.h>
 #include <Chrono.h>
 
-#define SIGNAL_HIGH_TIME_MCS 400
+#define LOW_SHORT_TIME 400
+#define LOW_LONG_TIME 800
+#define HIGH_SHORT_TIME 400
+#define HIGH_LONG_TIME 800
 
-
+// on pourrait faire 8 secteurs en ajoutant un bit en plus
 enum class Puce{
-  None = 0,
-  Finish = 1,
-  Sector1 = 2,
-  Sector2 = 3
+  Finish = 0b00,
+  Sector1 = 0b01,
+  Sector2 = 0b10,
+  Sector3 = 0b11
 };
 
 
 class IRSender {
 private:
   int irPin;
-  Puce puceId;
+  int8_t puceSignalBin;
   Chrono pulseClock;
 
 
-  void sendPulse(long microsec) {
-    pulseClock.restart();
-
-    while (!pulseClock.hasPassed(microsec, false)) {
-      digitalWrite(irPin, HIGH);
-      delayMicroseconds(9);
-      digitalWrite(irPin, LOW);
-      delayMicroseconds(9);
-    }
-  }
+  void sendPulse(long microsec);
 
 public:
-  IRSender(int pin, Puce puce) {
-    this->irPin = pin;
-    this->puceId = puce;
+  IRSender(int pin, int8_t puce);
 
-    pulseClock = Chrono(Chrono::MICROS);
-  }
+  void setup();
 
-  void setup() {
-    pinMode(irPin, OUTPUT);
-  }
+  void sendSignal();
 
-  void sendSignal() {
-    sendPulse(SIGNAL_HIGH_TIME_MCS);
-    
-    switch (puceId)
-    {
-    case Puce::Finish:
-      delayMicroseconds(400);
-      break;
-    case Puce::Sector1:
-      delayMicroseconds(800);
-      break;
-    case Puce::Sector2:
-      delayMicroseconds(800);
-      sendPulse(SIGNAL_HIGH_TIME_MCS);
-      delayMicroseconds(400);
-      break;
-    default:
-      break;
-    }
-  }
 
+  // pour faire les tests
   unsigned long previousMillis = 0;
-  const unsigned long interval = 2000;
-
-  void sendPulseSignal() {
+  void sendPulseSignal(unsigned long intervalMS) {
     unsigned long currentMillis = millis();
 
-    if (currentMillis - previousMillis >= interval) {
-      for (int i = 0; i < 20; i++)
+    if (currentMillis - previousMillis >= intervalMS) {
+      for (int i = 0; i < 8; i++)
         sendSignal();
 
       previousMillis = currentMillis;
