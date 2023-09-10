@@ -4,10 +4,10 @@
 #include <Arduino.h>
 #include <Chrono.h>
 
-#define LOW_SHORT_TIME 400
-#define LOW_LONG_TIME 800
-#define HIGH_SHORT_TIME 400
-#define HIGH_LONG_TIME 800
+#define HIGH_SHORT_TIME 250
+#define HIGH_LONG_TIME 500
+#define LOW_SHORT_TIME 250
+#define LOW_LONG_TIME 500
 
 // on pourrait faire 8 secteurs en ajoutant un bit en plus
 enum class Puce{
@@ -21,14 +21,14 @@ enum class Puce{
 class IRSender {
 private:
   int irPin;
-  int8_t puceSignalBin;
+  uint8_t puceSignalBin;
   Chrono pulseClock;
 
 
   void sendPulse(long microsec);
 
 public:
-  IRSender(int pin, int8_t puce);
+  IRSender(int pin, uint8_t puce);
 
   void setup();
 
@@ -41,7 +41,7 @@ public:
     unsigned long currentMillis = millis();
 
     if (currentMillis - previousMillis >= intervalMS) {
-      for (int i = 0; i < 8; i++)
+      for (int i = 0; i < 32; i++)
         sendSignal();
 
       previousMillis = currentMillis;

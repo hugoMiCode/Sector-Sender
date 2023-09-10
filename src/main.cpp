@@ -12,6 +12,6 @@ void setup() {
 }
 
 void loop() {
-  irSender.sendPulseSignal(1000);
+  irSender.sendPulseSignal(1500);
 }
 

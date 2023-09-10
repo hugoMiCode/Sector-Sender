@@ -1,7 +1,7 @@
 #include "IRSender.h"
 
 
-IRSender::IRSender(int pin, int8_t puce) {
+IRSender::IRSender(int pin, uint8_t puce) {
     this->irPin = pin;
     this->puceSignalBin = puce;
     this->pulseClock = Chrono(Chrono::MICROS);
